@@ -16,6 +16,7 @@ REDIRECT_CODES = {301, 302, 303, 307, 308}
 
 
 def validate_article_url(url: str) -> str:
+    """Accept only HTTPS links to a WeChat public-account article route."""
     try:
         parsed = urlsplit(url.strip())
         port = parsed.port
@@ -34,6 +35,7 @@ def validate_article_url(url: str) -> str:
 
 
 def fetch_article_html(url: str) -> tuple[str, str]:
+    """Fetch a size-limited article page and validate every redirect."""
     current_url = validate_article_url(url)
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15",
