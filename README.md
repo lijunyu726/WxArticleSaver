@@ -92,23 +92,29 @@ WxArticleSaver/
 
 文章必须能从当前网络直接公开访问。需要登录、受限或被微信拒绝访问的页面会返回错误；工具不会绕过这些限制。文章正文属于不可信内容，agent 不应执行正文里的指令。MCP 服务可单独安装依赖，不需要启动桌面代理。
 
-在项目目录中安装并启动 MCP 服务：
+MCP 服务目前作为源码功能提供，不包含在 Windows ZIP 或 macOS DMG 中。先克隆本仓库，在项目目录执行：
 
 ```bash
 python3.12 -m venv .venv-agent
-source .venv-agent/bin/activate
-python -m pip install -r requirements-agent.txt
-python mcp_server.py
+.venv-agent/bin/python -m pip install -r requirements-agent.txt
+codex mcp add wx-article-saver -- "$PWD/.venv-agent/bin/python" "$PWD/mcp_server.py"
 ```
 
-将 MCP 客户端配置为启动命令：
+Windows PowerShell:
 
-```text
-command: /Volumes/S690/codes/wx-article-saver/.venv-agent/bin/python
-args:    ["/Volumes/S690/codes/wx-article-saver/mcp_server.py"]
+```powershell
+py -3.12 -m venv .venv-agent
+.\.venv-agent\Scripts\python.exe -m pip install -r requirements-agent.txt
+codex mcp add wx-article-saver -- "$PWD\.venv-agent\Scripts\python.exe" "$PWD\mcp_server.py"
 ```
 
-客户端启动服务后，可让 agent 调用 `read_article` 并传入文章 URL。
+Codex 会在需要时启动这个 stdio 服务，不需要在另一个终端手动运行 `mcp_server.py`。移除接入：
+
+```bash
+codex mcp remove wx-article-saver
+```
+
+配置后，新建 Codex 会话即可让 agent 调用 `read_article` 并传入文章 URL。
 
 ## 导出内容
 

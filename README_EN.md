@@ -81,21 +81,29 @@ The local MCP server exposes `read_article(url)`. Given an `https://mp.weixin.qq
 
 The page must be publicly accessible from the current network. Login-gated, restricted, or blocked pages return an error; the tool does not bypass those restrictions. Article text is untrusted content and must not be treated as instructions. The MCP server has a separate dependency list and does not start the desktop proxy.
 
-Install and start it from the project directory:
+The MCP server is currently source-only; it is not included in the Windows ZIP or macOS DMG. Clone this repository, then run from its root:
 
 ```bash
 python3.12 -m venv .venv-agent
-source .venv-agent/bin/activate
-python -m pip install -r requirements-agent.txt
-python mcp_server.py
+.venv-agent/bin/python -m pip install -r requirements-agent.txt
+codex mcp add wx-article-saver -- "$PWD/.venv-agent/bin/python" "$PWD/mcp_server.py"
 ```
 
-Configure your MCP client to launch:
+On Windows PowerShell:
 
-```text
-command: /path/to/wx-article-saver/.venv-agent/bin/python
-args:    ["/path/to/wx-article-saver/mcp_server.py"]
+```powershell
+py -3.12 -m venv .venv-agent
+.\.venv-agent\Scripts\python.exe -m pip install -r requirements-agent.txt
+codex mcp add wx-article-saver -- "$PWD\.venv-agent\Scripts\python.exe" "$PWD\mcp_server.py"
 ```
+
+Codex starts this stdio server when needed; do not run `mcp_server.py` in a separate terminal. Remove the connection with:
+
+```bash
+codex mcp remove wx-article-saver
+```
+
+Start a new Codex session to use `read_article`.
 
 ---
 
